@@ -55,7 +55,7 @@
 	
 	var _reactDom = __webpack_require__(/*! react-dom */ 35);
 	
-	var _BookStore = __webpack_require__(/*! ./BookStore.jsx */ 177);
+	var _BookStore = __webpack_require__(/*! ./BookStore.jsx */ 175);
 	
 	var _BookStore2 = _interopRequireDefault(_BookStore);
 	
@@ -21967,6 +21967,132 @@
 
 /***/ },
 /* 175 */
+/*!***************************!*\
+  !*** ./src/BookStore.jsx ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 35);
+	
+	var _BookShelf = __webpack_require__(/*! ./BookShelf.jsx */ 176);
+	
+	var _BookShelf2 = _interopRequireDefault(_BookShelf);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var BookStore = _react2.default.createClass({
+	  displayName: 'BookStore',
+	
+	  getInitialState: function getInitialState() {
+	    return { data: [] };
+	  },
+	  responseTransform: function responseTransform(model, limit) {
+	    var sampleLength = model.length;
+	    for (var i = sampleLength, max = limit; i <= max; i++) {
+	      model.push({
+	        id: i + 1,
+	        name: model[Math.floor(Math.random() * sampleLength)].name,
+	        author: model[Math.floor(Math.random() * sampleLength)].author,
+	        genre: model[Math.floor(Math.random() * sampleLength)].genre,
+	        publish_date: model[Math.floor(Math.random() * sampleLength)].publish_date
+	      });
+	    }
+	    return model;
+	  },
+	  loadContent: function loadContent() {
+	    var xhr = new XMLHttpRequest();
+	    xhr.onload = function (e) {
+	      var response = JSON.parse(xhr.responseText);
+	      response = this.responseTransform(response, 150);
+	      this.setState({
+	        data: response
+	      });
+	    }.bind(this);
+	    xhr.open('get', this.props.url, true);
+	    xhr.send();
+	  },
+	  componentDidMount: function componentDidMount() {
+	    window.addEventListener('scroll', this.onScroll);
+	    this.loadContent();
+	  },
+	  onScroll: function onScroll() {
+	    var yOffset = window.pageYOffset,
+	        y = yOffset + window.innerHeight;
+	
+	    // fixme: querying the dom is bad, on every scroll is very bad. should stored as state later
+	    if (y >= document.getElementById('bookStore').clientHeight) {
+	      console.log('hit bottom', yOffset);
+	    }
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      { className: 'bookStore' },
+	      _react2.default.createElement(
+	        'h1',
+	        null,
+	        'Store of One Million Book'
+	      ),
+	      _react2.default.createElement(_BookShelf2.default, { data: this.state.data })
+	    );
+	  }
+	});
+	
+	module.exports = BookStore;
+
+/***/ },
+/* 176 */
+/*!***************************!*\
+  !*** ./src/BookShelf.jsx ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 35);
+	
+	var _Book = __webpack_require__(/*! ./Book.jsx */ 177);
+	
+	var _Book2 = _interopRequireDefault(_Book);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var BookShelf = _react2.default.createClass({
+		displayName: 'BookShelf',
+	
+		render: function render() {
+			var bookNodes = this.props.data.map(function (book) {
+				return _react2.default.createElement(_Book2.default, {
+					key: book.id,
+					id: book.id,
+					name: book.name,
+					genre: book.genre,
+					author: book.author.name,
+					publish_date: book.publish_date });
+			});
+	
+			return _react2.default.createElement(
+				'div',
+				{ className: 'book__container' },
+				bookNodes
+			);
+		}
+	});
+	
+	module.exports = BookShelf;
+
+/***/ },
+/* 177 */
 /*!**********************!*\
   !*** ./src/Book.jsx ***!
   \**********************/
@@ -22040,121 +22166,6 @@
 	;
 	
 	module.exports = Book;
-
-/***/ },
-/* 176 */
-/*!***************************!*\
-  !*** ./src/BookShelf.jsx ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _react = __webpack_require__(/*! react */ 1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactDom = __webpack_require__(/*! react-dom */ 35);
-	
-	var _Book = __webpack_require__(/*! ./Book.jsx */ 175);
-	
-	var _Book2 = _interopRequireDefault(_Book);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var BookShelf = _react2.default.createClass({
-		displayName: 'BookShelf',
-	
-		render: function render() {
-			var bookNodes = this.props.data.map(function (book) {
-				return _react2.default.createElement(_Book2.default, {
-					key: book.id,
-					id: book.id,
-					name: book.name,
-					genre: book.genre,
-					author: book.author.name,
-					publish_date: book.publish_date });
-			});
-	
-			return _react2.default.createElement(
-				'div',
-				{ className: 'book__container' },
-				bookNodes
-			);
-		}
-	});
-	
-	module.exports = BookShelf;
-
-/***/ },
-/* 177 */
-/*!***************************!*\
-  !*** ./src/BookStore.jsx ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _react = __webpack_require__(/*! react */ 1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactDom = __webpack_require__(/*! react-dom */ 35);
-	
-	var _BookShelf = __webpack_require__(/*! ./BookShelf.jsx */ 176);
-	
-	var _BookShelf2 = _interopRequireDefault(_BookShelf);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var BookStore = _react2.default.createClass({
-	  displayName: 'BookStore',
-	
-	  getInitialState: function getInitialState() {
-	    return { data: [] };
-	  },
-	  responseTransform: function responseTransform(model, limit) {
-	    var sampleLength = model.length;
-	    for (var i = sampleLength, max = limit; i <= max; i++) {
-	      model.push({
-	        id: i + 1,
-	        name: model[Math.floor(Math.random() * sampleLength)].name,
-	        author: model[Math.floor(Math.random() * sampleLength)].author,
-	        genre: model[Math.floor(Math.random() * sampleLength)].genre,
-	        publish_date: model[Math.floor(Math.random() * sampleLength)].publish_date
-	      });
-	    }
-	    return model;
-	  },
-	  pullSomeAPI: function pullSomeAPI() {
-	    var xhr = new XMLHttpRequest();
-	    xhr.onload = function (e) {
-	      var response = JSON.parse(xhr.responseText);
-	      console.log(response);
-	      response = this.responseTransform(response, 500);
-	      this.setState({ data: response });
-	    }.bind(this);
-	    xhr.open('get', this.props.url, true);
-	    xhr.send();
-	  },
-	  componentDidMount: function componentDidMount() {
-	    this.pullSomeAPI();
-	  },
-	  render: function render() {
-	    return _react2.default.createElement(
-	      'div',
-	      { className: 'bookStore' },
-	      _react2.default.createElement(
-	        'h1',
-	        null,
-	        'Store of One Million Book'
-	      ),
-	      _react2.default.createElement(_BookShelf2.default, { data: this.state.data })
-	    );
-	  }
-	});
-	
-	module.exports = BookStore;
 
 /***/ }
 /******/ ]);

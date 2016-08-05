@@ -19,19 +19,30 @@ var BookStore = React.createClass({
     }
     return model;
   },
-  pullSomeAPI: function(){
+  loadContent: function(){
   	var xhr = new XMLHttpRequest();
   	xhr.onload = function(e){
   		  var response = JSON.parse(xhr.responseText);
-  	    console.log(response);
-        response = this.responseTransform(response, 500);
-  	    this.setState({ data: response });
+        response = this.responseTransform(response, 150);
+  	    this.setState({ 
+          data: response
+        });
   	}.bind(this);
   	xhr.open('get', this.props.url, true);
   	xhr.send();
   },
   componentDidMount: function(){
-  	this.pullSomeAPI();
+  	window.addEventListener('scroll', this.onScroll);
+    this.loadContent();
+  },
+  onScroll: function(){
+    var yOffset = window.pageYOffset,
+        y = yOffset + window.innerHeight;
+
+      // fixme: querying the dom is bad, on every scroll is very bad. should stored as state later
+      if(y >= document.getElementById('bookStore').clientHeight){
+        console.log('hit bottom', yOffset);
+      }
   },
   render: function() {
     return (
