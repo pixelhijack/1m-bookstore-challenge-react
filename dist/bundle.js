@@ -21990,7 +21990,7 @@
 	  displayName: 'BookStore',
 	
 	  getInitialState: function getInitialState() {
-	    return { data: [] };
+	    return { data: [], model: [], counter: 0 };
 	  },
 	  responseTransform: function responseTransform(model, limit) {
 	    var sampleLength = model.length;
@@ -22009,13 +22009,17 @@
 	    var xhr = new XMLHttpRequest();
 	    xhr.onload = function (e) {
 	      var response = JSON.parse(xhr.responseText);
-	      response = this.responseTransform(response, 150);
+	      this.setState({ data: this.responseTransform(response, 10000) });
 	      this.setState({
-	        data: response
+	        model: this.getModel(100),
+	        counter: 100
 	      });
 	    }.bind(this);
 	    xhr.open('get', this.props.url, true);
 	    xhr.send();
+	  },
+	  getModel: function getModel(howMany) {
+	    return this.state.data.slice(this.state.counter, this.state.counter + howMany);
 	  },
 	  componentDidMount: function componentDidMount() {
 	    window.addEventListener('scroll', this.onScroll);
@@ -22028,6 +22032,10 @@
 	    // fixme: querying the dom is bad, on every scroll is very bad. should stored as state later
 	    if (y >= document.getElementById('bookStore').clientHeight) {
 	      console.log('hit bottom', yOffset);
+	      this.setState({
+	        model: this.getModel(100),
+	        counter: this.state.counter + 100
+	      });
 	    }
 	  },
 	  render: function render() {
@@ -22039,7 +22047,7 @@
 	        null,
 	        'Store of One Million Book'
 	      ),
-	      _react2.default.createElement(_BookShelf2.default, { data: this.state.data })
+	      _react2.default.createElement(_BookShelf2.default, { data: this.state.model })
 	    );
 	  }
 	});
