@@ -1,0 +1,35 @@
+body {
+    font-family: "HelveticaNeueUltraLight", "HelveticaNeue-Ultra-Light", "Helvetica Neue Ultra Light", "HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosRegular', "Arial", sans-serif; font-weight:100; font-stretch:normal;
+}
+
+.book {
+    width: 100%;
+    box-sizing: border-box;
+    display: table;
+    table-layout: fixed;
+    border: 1px solid #e7e7e7;
+}
+
+.book__id,
+.book__name,
+.book__author,
+.book__genre,
+.book__date {
+  display: table-cell;
+  flex: 1;
+  flex-direction: column;
+  position: relative;
+}
+.book__id {
+    width: 3em;
+}
+
+.book__controls div {
+    display: inline;
+    float: left;
+    cursor: pointer;
+    width: 160px;
+    background-color: #e7e7e7;
+    padding: 5px 5px; 
+    margin: 10px 20px;
+}
