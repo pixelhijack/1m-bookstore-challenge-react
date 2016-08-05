@@ -49,130 +49,21 @@
 
 	'use strict';
 	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
 	var _react = __webpack_require__(/*! react */ 1);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
 	var _reactDom = __webpack_require__(/*! react-dom */ 35);
 	
+	var _BookStore = __webpack_require__(/*! ./BookStore.jsx */ 177);
+	
+	var _BookStore2 = _interopRequireDefault(_BookStore);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	var apiUrl = './data/BOOKS.json';
 	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Book = function (_React$Component) {
-		_inherits(Book, _React$Component);
-	
-		function Book() {
-			_classCallCheck(this, Book);
-	
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(Book).apply(this, arguments));
-		}
-	
-		_createClass(Book, [{
-			key: 'render',
-			value: function render() {
-				return _react2.default.createElement(
-					'div',
-					{ className: 'book' },
-					_react2.default.createElement(
-						'span',
-						{ className: 'book__id' },
-						this.props.id
-					),
-					_react2.default.createElement(
-						'span',
-						{ className: 'book__name' },
-						this.props.name
-					),
-					_react2.default.createElement(
-						'span',
-						{ className: 'book__author' },
-						this.props.author
-					),
-					_react2.default.createElement(
-						'span',
-						{ className: 'book__genre' },
-						this.props.genre
-					),
-					_react2.default.createElement(
-						'span',
-						{ className: 'book__date' },
-						this.props.publish_date
-					)
-				);
-			}
-		}]);
-	
-		return Book;
-	}(_react2.default.Component);
-	
-	;
-	
-	var BookShelf = _react2.default.createClass({
-		displayName: 'BookShelf',
-	
-		render: function render() {
-			var bookNodes = this.props.data.map(function (book) {
-				return _react2.default.createElement(Book, {
-					key: book.id,
-					id: book.id,
-					name: book.name,
-					genre: book.genre,
-					author: book.author.name,
-					publish_date: book.publish_date });
-			});
-	
-			return _react2.default.createElement(
-				'div',
-				{ className: 'book__container' },
-				bookNodes
-			);
-		}
-	});
-	
-	// tutorial1.js
-	var BookStore = _react2.default.createClass({
-		displayName: 'BookStore',
-	
-		getInitialState: function getInitialState() {
-			return { data: [] };
-		},
-		pullSomeAPI: function pullSomeAPI() {
-			var data;
-			var xhr = new XMLHttpRequest();
-			var component = this;
-			xhr.onload = function (e) {
-				data = JSON.parse(this.responseText);
-				console.log(data);
-				component.setState({ data: data });
-			};
-			xhr.open('get', this.props.url, true);
-			xhr.send();
-		},
-		componentDidMount: function componentDidMount() {
-			this.pullSomeAPI();
-		},
-		render: function render() {
-			return _react2.default.createElement(
-				'div',
-				{ className: 'bookStore' },
-				_react2.default.createElement(
-					'h1',
-					null,
-					'Store of One Million Book'
-				),
-				_react2.default.createElement(BookShelf, { data: this.state.data })
-			);
-		}
-	});
-	
-	(0, _reactDom.render)(_react2.default.createElement(BookStore, { url: './data/BOOKS.json' }), document.getElementById('bookStore'));
+	(0, _reactDom.render)(_react2.default.createElement(_BookStore2.default, { url: apiUrl }), document.getElementById('bookStore'));
 
 /***/ },
 /* 1 */
@@ -22073,6 +21964,185 @@
 	var ReactMount = __webpack_require__(/*! ./ReactMount */ 167);
 	
 	module.exports = ReactMount.renderSubtreeIntoContainer;
+
+/***/ },
+/* 175 */
+/*!**********************!*\
+  !*** ./src/Book.jsx ***!
+  \**********************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 35);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Book = function (_React$Component) {
+	  _inherits(Book, _React$Component);
+	
+	  function Book() {
+	    _classCallCheck(this, Book);
+	
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Book).apply(this, arguments));
+	  }
+	
+	  _createClass(Book, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'book' },
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'book__id' },
+	          this.props.id
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'book__name' },
+	          this.props.name
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'book__author' },
+	          this.props.author
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'book__genre' },
+	          this.props.genre
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'book__date' },
+	          this.props.publish_date
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Book;
+	}(_react2.default.Component);
+	
+	;
+	
+	module.exports = Book;
+
+/***/ },
+/* 176 */
+/*!***************************!*\
+  !*** ./src/BookShelf.jsx ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 35);
+	
+	var _Book = __webpack_require__(/*! ./Book.jsx */ 175);
+	
+	var _Book2 = _interopRequireDefault(_Book);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var BookShelf = _react2.default.createClass({
+		displayName: 'BookShelf',
+	
+		render: function render() {
+			var bookNodes = this.props.data.map(function (book) {
+				return _react2.default.createElement(_Book2.default, {
+					key: book.id,
+					id: book.id,
+					name: book.name,
+					genre: book.genre,
+					author: book.author.name,
+					publish_date: book.publish_date });
+			});
+	
+			return _react2.default.createElement(
+				'div',
+				{ className: 'book__container' },
+				bookNodes
+			);
+		}
+	});
+	
+	module.exports = BookShelf;
+
+/***/ },
+/* 177 */
+/*!***************************!*\
+  !*** ./src/BookStore.jsx ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 35);
+	
+	var _BookShelf = __webpack_require__(/*! ./BookShelf.jsx */ 176);
+	
+	var _BookShelf2 = _interopRequireDefault(_BookShelf);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var BookStore = _react2.default.createClass({
+	  displayName: 'BookStore',
+	
+	  getInitialState: function getInitialState() {
+	    return { data: [] };
+	  },
+	  pullSomeAPI: function pullSomeAPI() {
+	    var data;
+	    var xhr = new XMLHttpRequest();
+	    var component = this;
+	    xhr.onload = function (e) {
+	      data = JSON.parse(this.responseText);
+	      console.log(data);
+	      component.setState({ data: data });
+	    };
+	    xhr.open('get', this.props.url, true);
+	    xhr.send();
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this.pullSomeAPI();
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      { className: 'bookStore' },
+	      _react2.default.createElement(
+	        'h1',
+	        null,
+	        'Store of One Million Book'
+	      ),
+	      _react2.default.createElement(_BookShelf2.default, { data: this.state.data })
+	    );
+	  }
+	});
+	
+	module.exports = BookStore;
 
 /***/ }
 /******/ ]);
