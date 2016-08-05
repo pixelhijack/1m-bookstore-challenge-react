@@ -50,6 +50,7 @@ var BookStore = React.createClass({
           model: this.getModel(100),
           counter: this.state.counter + 100
         });
+        window.scrollTo(0, 0);
       }
   },
   render: function() {
