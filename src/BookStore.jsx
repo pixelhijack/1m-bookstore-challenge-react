@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import React from 'react';
 import {render} from 'react-dom';
 import BookShelf from './BookShelf.jsx';
@@ -53,10 +54,17 @@ var BookStore = React.createClass({
         window.scrollTo(0, 0);
       }
   },
+  onSort: function(){
+    this.setState({
+      model: _.sortBy(this.state.data, 'name').slice(0,100)
+    });
+  },
   render: function() {
     return (
       <div className='bookStore'>
         <h1>Store of One Million Book</h1>
+        <div onClick={this.onSort}>Sort by name</div>
+        <hr></hr>
         <BookShelf data={this.state.model} />
       </div>
     );
