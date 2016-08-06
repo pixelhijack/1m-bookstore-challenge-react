@@ -33,8 +33,8 @@ var BookStore = React.createClass({
   	xhr.open('get', this.props.url, true);
   	xhr.send();
   },
-  getModel: function(howMany){
-    return this.state.data.slice(this.state.counter, this.state.counter + howMany);
+  getModel: function(sliceWhere){
+    return this.state.data.slice(sliceWhere, sliceWhere + PAGINATION);
   },
   componentDidMount: function(){
   	window.addEventListener('scroll', this.onScroll);
@@ -47,10 +47,7 @@ var BookStore = React.createClass({
       // fixme: querying the dom is bad, on every scroll is very bad. should stored as state later
       if(y >= document.getElementById('bookStore').clientHeight){
         console.log('hit bottom', yOffset);
-        this.setState({ counter: this.state.counter + PAGINATION });
-        this.setState({
-          model: this.getModel(PAGINATION),
-        });
+        this.nextPage();
         window.scrollTo(0, 0);
       }
   },
@@ -59,10 +56,16 @@ var BookStore = React.createClass({
       model: _.sortBy(this.state.data, 'name').slice(0,PAGINATION)
     });
   },
+  nextPage: function(){
+    this.setState({ counter: this.state.counter + PAGINATION });
+    this.setState({
+      model: this.getModel(this.state.counter + PAGINATION)
+    });
+  },
   reset: function(){
     this.setState({ counter: 0 });
     this.setState({
-      model: this.getModel(PAGINATION), 
+      model: this.getModel(0), 
     });
   },
   render: function() {

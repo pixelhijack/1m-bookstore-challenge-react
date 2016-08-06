@@ -21990,7 +21990,7 @@
 	
 	var _BookShelf2 = _interopRequireDefault(_BookShelf);
 	
-	var _Button = __webpack_require__(/*! ./Button.jsx */ 180);
+	var _Button = __webpack_require__(/*! ./Button.jsx */ 179);
 	
 	var _Button2 = _interopRequireDefault(_Button);
 	
@@ -22027,8 +22027,8 @@
 	    xhr.open('get', this.props.url, true);
 	    xhr.send();
 	  },
-	  getModel: function getModel(howMany) {
-	    return this.state.data.slice(this.state.counter, this.state.counter + howMany);
+	  getModel: function getModel(sliceWhere) {
+	    return this.state.data.slice(sliceWhere, sliceWhere + PAGINATION);
 	  },
 	  componentDidMount: function componentDidMount() {
 	    window.addEventListener('scroll', this.onScroll);
@@ -22041,10 +22041,7 @@
 	    // fixme: querying the dom is bad, on every scroll is very bad. should stored as state later
 	    if (y >= document.getElementById('bookStore').clientHeight) {
 	      console.log('hit bottom', yOffset);
-	      this.setState({ counter: this.state.counter + PAGINATION });
-	      this.setState({
-	        model: this.getModel(PAGINATION)
-	      });
+	      this.nextPage();
 	      window.scrollTo(0, 0);
 	    }
 	  },
@@ -22053,10 +22050,16 @@
 	      model: _underscore2.default.sortBy(this.state.data, 'name').slice(0, PAGINATION)
 	    });
 	  },
+	  nextPage: function nextPage() {
+	    this.setState({ counter: this.state.counter + PAGINATION });
+	    this.setState({
+	      model: this.getModel(this.state.counter + PAGINATION)
+	    });
+	  },
 	  reset: function reset() {
 	    this.setState({ counter: 0 });
 	    this.setState({
-	      model: this.getModel(PAGINATION)
+	      model: this.getModel(0)
 	    });
 	  },
 	  render: function render() {
@@ -23757,8 +23760,7 @@
 	module.exports = Book;
 
 /***/ },
-/* 179 */,
-/* 180 */
+/* 179 */
 /*!************************!*\
   !*** ./src/Button.jsx ***!
   \************************/
