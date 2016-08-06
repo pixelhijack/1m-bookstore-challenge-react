@@ -22046,21 +22046,28 @@
 	    }
 	  },
 	  onSort: function onSort() {
-	    this.setState({
-	      model: _underscore2.default.sortBy(this.state.data, 'name').slice(0, PAGINATION)
-	    });
+	    this.setState({ data: _underscore2.default.sortBy(this.state.data, 'name') });
+	    setTimeout(function () {
+	      this.setState({
+	        counter: 0,
+	        model: this.getModel(0)
+	      });
+	    }.bind(this), 0);
 	  },
 	  nextPage: function nextPage() {
-	    this.setState({ counter: this.state.counter + PAGINATION });
 	    this.setState({
+	      counter: this.state.counter + PAGINATION,
 	      model: this.getModel(this.state.counter + PAGINATION)
 	    });
 	  },
 	  reset: function reset() {
-	    this.setState({ counter: 0 });
-	    this.setState({
-	      model: this.getModel(0)
-	    });
+	    this.setState({ data: _underscore2.default.sortBy(this.state.data, 'id') });
+	    setTimeout(function () {
+	      this.setState({
+	        counter: 0,
+	        model: this.getModel(0)
+	      });
+	    }.bind(this), 0);
 	  },
 	  render: function render() {
 	    return _react2.default.createElement(
