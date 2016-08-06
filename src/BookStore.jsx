@@ -2,6 +2,9 @@ import _ from 'underscore';
 import React from 'react';
 import {render} from 'react-dom';
 import BookShelf from './BookShelf.jsx';
+import Button from './Button.jsx';
+
+const PAGINATION = 100;
 
 var BookStore = React.createClass({
   getInitialState: function() {
@@ -24,11 +27,8 @@ var BookStore = React.createClass({
   	var xhr = new XMLHttpRequest();
   	xhr.onload = function(e){
   		  var response = JSON.parse(xhr.responseText);
-  	    this.setState({ data: this.responseTransform(response, 10000) });
-        this.setState({  
-          model: this.getModel(100), 
-          counter: 100
-        });
+  	    this.setState({ data: this.responseTransform(response, this.props.numberOfBooks) });
+        this.reset();
   	}.bind(this);
   	xhr.open('get', this.props.url, true);
   	xhr.send();
@@ -47,23 +47,30 @@ var BookStore = React.createClass({
       // fixme: querying the dom is bad, on every scroll is very bad. should stored as state later
       if(y >= document.getElementById('bookStore').clientHeight){
         console.log('hit bottom', yOffset);
+        this.setState({ counter: this.state.counter + PAGINATION });
         this.setState({
-          model: this.getModel(100),
-          counter: this.state.counter + 100
+          model: this.getModel(PAGINATION),
         });
         window.scrollTo(0, 0);
       }
   },
   onSort: function(){
     this.setState({
-      model: _.sortBy(this.state.data, 'name').slice(0,100)
+      model: _.sortBy(this.state.data, 'name').slice(0,PAGINATION)
+    });
+  },
+  reset: function(){
+    this.setState({ counter: 0 });
+    this.setState({
+      model: this.getModel(PAGINATION), 
     });
   },
   render: function() {
     return (
       <div className='bookStore'>
         <h1>Store of One Million Book</h1>
-        <div onClick={this.onSort}>Sort by name</div>
+        <Button onClick={this.reset} text={'Reset'}></Button>
+        <Button onClick={this.onSort} text={'Sort by name'}></Button>
         <hr></hr>
         <BookShelf data={this.state.model} />
       </div>
