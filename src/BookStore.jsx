@@ -8,7 +8,12 @@ const PAGINATION = 100;
 
 var BookStore = React.createClass({
   getInitialState: function() {
-    return { data: [], model: [], counter: 0 };    
+    return { 
+      data: [], 
+      sortBy: 'id', 
+      filterBy: '',
+      counter: 0 
+    };    
   },
   responseTransform: function(model, limit){
     var sampleLength = model.length;
@@ -28,13 +33,13 @@ var BookStore = React.createClass({
   	xhr.onload = function(e){
   		  var response = JSON.parse(xhr.responseText);
   	    this.setState({ data: this.responseTransform(response, this.props.numberOfBooks) });
-        this.reset();
   	}.bind(this);
   	xhr.open('get', this.props.url, true);
   	xhr.send();
   },
-  getModel: function(sliceWhere){
-    return this.state.data.slice(sliceWhere, sliceWhere + PAGINATION);
+  getModel: function(){
+    return _.sortBy(this.state.data, this.state.sortBy)
+            .slice(this.state.counter, this.state.counter + PAGINATION);
   },
   componentDidMount: function(){
   	window.addEventListener('scroll', this.onScroll);
@@ -52,28 +57,22 @@ var BookStore = React.createClass({
       }
   },
   onSort: function(){
-    this.setState({ data: _.sortBy(this.state.data, 'name') });
-    setTimeout(function(){
-      this.setState({
-        counter: 0,
-        model: this.getModel(0)
-      });
-    }.bind(this), 0);
+    this.setState({
+      counter: 0,
+      sortBy: 'name'
+    });
   },
   nextPage: function(){
     this.setState({
-      counter: this.state.counter + PAGINATION,
-      model: this.getModel(this.state.counter + PAGINATION)
+      counter: this.state.counter + PAGINATION
     });
   },
   reset: function(){
-    this.setState({ data: _.sortBy(this.state.data, 'id') });
-    setTimeout(function(){
-      this.setState({
-        counter: 0,
-        model: this.getModel(0)
-      });
-    }.bind(this), 0);
+    this.setState({
+      counter: 0,
+      sortBy: 'id', 
+      filterBy: ''
+    });
   },
   render: function() {
     return (
@@ -82,7 +81,7 @@ var BookStore = React.createClass({
         <Button onClick={this.reset} text={'Reset'}></Button>
         <Button onClick={this.onSort} text={'Sort by name'}></Button>
         <hr></hr>
-        <BookShelf data={this.state.model} />
+        <BookShelf data={this.getModel()} />
       </div>
     );
   }

@@ -22002,7 +22002,12 @@
 	  displayName: 'BookStore',
 	
 	  getInitialState: function getInitialState() {
-	    return { data: [], model: [], counter: 0 };
+	    return {
+	      data: [],
+	      sortBy: 'id',
+	      filterBy: '',
+	      counter: 0
+	    };
 	  },
 	  responseTransform: function responseTransform(model, limit) {
 	    var sampleLength = model.length;
@@ -22022,13 +22027,12 @@
 	    xhr.onload = function (e) {
 	      var response = JSON.parse(xhr.responseText);
 	      this.setState({ data: this.responseTransform(response, this.props.numberOfBooks) });
-	      this.reset();
 	    }.bind(this);
 	    xhr.open('get', this.props.url, true);
 	    xhr.send();
 	  },
-	  getModel: function getModel(sliceWhere) {
-	    return this.state.data.slice(sliceWhere, sliceWhere + PAGINATION);
+	  getModel: function getModel() {
+	    return _underscore2.default.sortBy(this.state.data, this.state.sortBy).slice(this.state.counter, this.state.counter + PAGINATION);
 	  },
 	  componentDidMount: function componentDidMount() {
 	    window.addEventListener('scroll', this.onScroll);
@@ -22046,28 +22050,22 @@
 	    }
 	  },
 	  onSort: function onSort() {
-	    this.setState({ data: _underscore2.default.sortBy(this.state.data, 'name') });
-	    setTimeout(function () {
-	      this.setState({
-	        counter: 0,
-	        model: this.getModel(0)
-	      });
-	    }.bind(this), 0);
+	    this.setState({
+	      counter: 0,
+	      sortBy: 'name'
+	    });
 	  },
 	  nextPage: function nextPage() {
 	    this.setState({
-	      counter: this.state.counter + PAGINATION,
-	      model: this.getModel(this.state.counter + PAGINATION)
+	      counter: this.state.counter + PAGINATION
 	    });
 	  },
 	  reset: function reset() {
-	    this.setState({ data: _underscore2.default.sortBy(this.state.data, 'id') });
-	    setTimeout(function () {
-	      this.setState({
-	        counter: 0,
-	        model: this.getModel(0)
-	      });
-	    }.bind(this), 0);
+	    this.setState({
+	      counter: 0,
+	      sortBy: 'id',
+	      filterBy: ''
+	    });
 	  },
 	  render: function render() {
 	    return _react2.default.createElement(
@@ -22081,7 +22079,7 @@
 	      _react2.default.createElement(_Button2.default, { onClick: this.reset, text: 'Reset' }),
 	      _react2.default.createElement(_Button2.default, { onClick: this.onSort, text: 'Sort by name' }),
 	      _react2.default.createElement('hr', null),
-	      _react2.default.createElement(_BookShelf2.default, { data: this.state.model })
+	      _react2.default.createElement(_BookShelf2.default, { data: this.getModel() })
 	    );
 	  }
 	});
