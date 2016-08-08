@@ -21994,6 +21994,10 @@
 	
 	var _Button2 = _interopRequireDefault(_Button);
 	
+	var _Select = __webpack_require__(/*! ./Select.jsx */ 180);
+	
+	var _Select2 = _interopRequireDefault(_Select);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var PAGINATION = 100;
@@ -22004,6 +22008,7 @@
 	  getInitialState: function getInitialState() {
 	    return {
 	      data: [],
+	      genres: [],
 	      sortBy: 'id',
 	      filterBy: '',
 	      counter: 0
@@ -22025,14 +22030,21 @@
 	  loadContent: function loadContent() {
 	    var xhr = new XMLHttpRequest();
 	    xhr.onload = function (e) {
-	      var response = JSON.parse(xhr.responseText);
-	      this.setState({ data: this.responseTransform(response, this.props.numberOfBooks) });
+	      var response = this.responseTransform(JSON.parse(xhr.responseText), this.props.numberOfBooks);
+	      this.setState({
+	        data: response,
+	        genres: _underscore2.default.uniq(_underscore2.default.pluck(response, 'genre'))
+	      });
 	    }.bind(this);
 	    xhr.open('get', this.props.url, true);
 	    xhr.send();
 	  },
 	  getModel: function getModel() {
-	    return _underscore2.default.sortBy(this.state.data, this.state.sortBy).slice(this.state.counter, this.state.counter + PAGINATION);
+	    var filteredModel = this.state.filterBy ? _underscore2.default.filter(this.state.data, function (book) {
+	      // filterBy should be generic, not genre specific later
+	      return book.genre = this.state.filterBy;
+	    }.bind(this)) : this.state.data;
+	    return _underscore2.default.sortBy(filteredModel, this.state.sortBy).slice(this.state.counter, this.state.counter + PAGINATION);
 	  },
 	  componentDidMount: function componentDidMount() {
 	    window.addEventListener('scroll', this.onScroll);
@@ -22053,6 +22065,13 @@
 	    this.setState({
 	      counter: 0,
 	      sortBy: 'name'
+	    });
+	  },
+	  onFilter: function onFilter(e) {
+	    console.log('onfilter', e.currentTarget.options[e.currentTarget.selectedIndex].value);
+	    this.setState({
+	      counter: 0,
+	      filterBy: e.currentTarget.options[e.currentTarget.selectedIndex].value
 	    });
 	  },
 	  nextPage: function nextPage() {
@@ -22077,7 +22096,13 @@
 	        'Store of One Million Book'
 	      ),
 	      _react2.default.createElement(_Button2.default, { onClick: this.reset, text: 'Reset' }),
-	      _react2.default.createElement(_Button2.default, { onClick: this.onSort, text: 'Sort by name' }),
+	      _react2.default.createElement(_Button2.default, { onClick: this.onSort, text: 'Sort by title' }),
+	      _react2.default.createElement(_Select2.default, { title: 'Filter by genre: ', onChange: this.onFilter, options: this.state.genres.map(function (genre) {
+	          return {
+	            text: genre,
+	            value: genre
+	          };
+	        }) }),
 	      _react2.default.createElement('hr', null),
 	      _react2.default.createElement(_BookShelf2.default, { data: this.getModel() })
 	    );
@@ -23796,6 +23821,57 @@
 	});
 	
 	module.exports = Button;
+
+/***/ },
+/* 180 */
+/*!************************!*\
+  !*** ./src/Select.jsx ***!
+  \************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 35);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var Select = _react2.default.createClass({
+	    displayName: 'Select',
+	
+	    handleChange: function handleChange(e) {
+	        console.log('selected: ', e.currentTarget.options[e.currentTarget.selectedIndex].value);
+	    },
+	    render: function render() {
+	        var options = this.props.options.map(function (opt, i) {
+	            return _react2.default.createElement(
+	                'option',
+	                { key: i,
+	                    value: opt.value },
+	                opt.text
+	            );
+	        });
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'cta' },
+	            _react2.default.createElement(
+	                'span',
+	                null,
+	                this.props.title
+	            ),
+	            _react2.default.createElement(
+	                'select',
+	                { onChange: this.props.onChange || this.handleChange },
+	                options
+	            )
+	        );
+	    }
+	});
+	
+	module.exports = Select;
 
 /***/ }
 /******/ ]);
